@@ -12,7 +12,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: url('cats-kittens.gif') center/cover no-repeat; /* Substitua 'caminho/do/seu/gif.gif' pelo caminho do seu gif de fundo */
+      background: url('dog.gif') center/cover no-repeat; /* Substitua 'caminho/do/seu/gif.gif' pelo caminho do seu gif de fundo */
       color: #ffffff; /* Cor do texto */
       font-family: Arial, sans-serif;
       flex-direction: column; /* Adicionado para alinhar verticalmente os elementos */
@@ -39,17 +39,26 @@
   </style>
 </head>
 <body>
-  <h1>Clique para te levar a uma gatinha</h1>
+  <h1>Clique e descubra!</h1>
   
-  <!-- Botão estilizado que redireciona para uma URL específica ao ser clicado -->
-  <button onclick="redirecionarParaOutraPagina()">😍</button>
+  <button onclick="exibirVideo()">😍</button>
+
+  <!-- Container para o vídeo (inicialmente oculto) -->
+  <div id="videoContainer" style="display: none;">
+    <video controls id="meuVideo">
+      <source src="video.mp4" type="video/mp4">
+      Seu navegador não suporta o elemento de vídeo.
+    </video>
+  </div>
 
   <script>
-    // Função para redirecionar para uma URL específica
-    function redirecionarParaOutraPagina() {
-      // Substitua 'URL_DESTINO' pela URL para a qual você deseja redirecionar
-      var urlDestino = 'https://www.instagram.com/dudantrindade_/';
-      window.location.href = urlDestino;
+    // Função para exibir o vídeo ao clicar no botão
+    function exibirVideo() {
+      // Mostra o container do vídeo
+      document.getElementById('videoContainer').style.display = 'block';
+
+      // Inicia a reprodução do vídeo
+      document.getElementById('meuVideo').play();
     }
   </script>
 </body>
