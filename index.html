@@ -71,9 +71,14 @@
             margin-bottom: 10px;
             border-radius: 5px;
             display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        li .task-content {
+            display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         li button {
@@ -87,6 +92,29 @@
 
         li button:hover {
             background-color: #c9302c;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: #5cb85c;
+            width: 0;
+        }
+
+        .increase-progress {
+            margin-top: 10px;
+            background-color: #0275d8;
+        }
+
+        .increase-progress:hover {
+            background-color: #025aa5;
         }
     </style>
 </head>
@@ -106,23 +134,47 @@
 
         function loadTasks() {
             const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks.forEach(task => addTaskToDOM(task));
+            tasks.forEach(task => addTaskToDOM(task.text, task.progress));
         }
 
         function saveTasks() {
-            const tasks = Array.from(todoList.children).map(li => li.firstChild.textContent);
+            const tasks = Array.from(todoList.children).map(li => ({
+                text: li.querySelector('span').textContent,
+                progress: li.querySelector('.progress').style.width
+            }));
             localStorage.setItem('tasks', JSON.stringify(tasks));
         }
 
-        function addTaskToDOM(taskText) {
+        function addTaskToDOM(taskText, progress = '0%') {
             const li = document.createElement('li');
-            li.innerHTML = `<span>${taskText}</span> <button>Remover</button>`;
+            li.innerHTML = `
+                <div class="task-content">
+                    <span contenteditable="true">${taskText}</span>
+                    <button class="remove-task">Remover</button>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: ${progress};"></div>
+                </div>
+                <button class="increase-progress">Aumentar Progresso</button>
+            `;
             todoList.appendChild(li);
 
-            li.querySelector('button').addEventListener('click', () => {
+            li.querySelector('.remove-task').addEventListener('click', () => {
                 li.remove();
                 saveTasks();
             });
+
+            li.querySelector('.increase-progress').addEventListener('click', () => {
+                const progressBar = li.querySelector('.progress');
+                let currentProgress = parseInt(progressBar.style.width);
+                if (currentProgress < 100) {
+                    currentProgress += 10;
+                    progressBar.style.width = currentProgress + '%';
+                    saveTasks();
+                }
+            });
+
+            li.querySelector('span').addEventListener('input', saveTasks);
         }
 
         addButton.addEventListener('click', () => {
