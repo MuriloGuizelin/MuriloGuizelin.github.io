@@ -1,67 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🐈💘</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: url('dog.gif') center/cover no-repeat; /* Substitua 'caminho/do/seu/gif.gif' pelo caminho do seu gif de fundo */
-      color: #ffffff; /* Cor do texto */
-      font-family: Arial, sans-serif;
-      flex-direction: column; /* Adicionado para alinhar verticalmente os elementos */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 20px; /* Espaço abaixo do h1 */
-    }
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #3498db; /* Cor de fundo do botão */
-      color: #ffffff; /* Cor do texto do botão */
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+        h1 {
+            margin: 0;
+            color: #333;
+        }
 
-    button:hover {
-      background-color: #2980b9; /* Cor de fundo do botão ao passar o mouse */
-    }
-  </style>
+        .input-section {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 70%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        li {
+            padding: 10px;
+            background: #f9f9f9;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        li button {
+            background-color: #d9534f;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        li button:hover {
+            background-color: #c9302c;
+        }
+    </style>
 </head>
 <body>
-  <h1>Clique e descubra!</h1>
-  
-  <button onclick="exibirVideo()">😍</button>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <div class="input-section">
+            <input type="text" id="todo-input" placeholder="Adicione uma tarefa...">
+            <button id="add-button">Adicionar</button>
+        </div>
+        <ul id="todo-list"></ul>
+    </div>
+    <script>
+        const input = document.getElementById('todo-input');
+        const addButton = document.getElementById('add-button');
+        const todoList = document.getElementById('todo-list');
 
-  <!-- Container para o vídeo (inicialmente oculto) -->
-  <div id="videoContainer" style="display: none;">
-    <video controls id="meuVideo">
-      <source src="video.mp4" type="video/mp4">
-      Seu navegador não suporta o elemento de vídeo.
-    </video>
-  </div>
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => addTaskToDOM(task));
+        }
 
-  <script>
-    // Função para exibir o vídeo ao clicar no botão
-    function exibirVideo() {
-      // Mostra o container do vídeo
-      document.getElementById('videoContainer').style.display = 'block';
+        function saveTasks() {
+            const tasks = Array.from(todoList.children).map(li => li.firstChild.textContent);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
 
-      // Inicia a reprodução do vídeo
-      document.getElementById('meuVideo').play();
-    }
-  </script>
+        function addTaskToDOM(taskText) {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${taskText}</span> <button>Remover</button>`;
+            todoList.appendChild(li);
+
+            li.querySelector('button').addEventListener('click', () => {
+                li.remove();
+                saveTasks();
+            });
+        }
+
+        addButton.addEventListener('click', () => {
+            const taskText = input.value.trim();
+            if (taskText === '') return;
+
+            addTaskToDOM(taskText);
+            saveTasks();
+
+            input.value = '';
+            input.focus();
+        });
+
+        loadTasks();
+    </script>
 </body>
 </html>
-  <!-- um bjo pra minha querida -->
-
